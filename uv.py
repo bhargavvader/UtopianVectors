@@ -3,10 +3,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle as pkl
+import spacy
 
 SEARCH_WORDS = ['justice', 'man', 'woman', 'artificial_intelligence', 'factory', 'labour', 'state',
                 'economy', 'food', 'freedom', 'health', 'time', 'home', 'house', 'government', 'immigrant',
-                'safety', 'police', 'policing', 'crime', 'equality', 'planet', 'space', 'earth']
+                'safety', 'police', 'policing', 'crime', 'equality', 'planet', 'space', 'earth',
+                'technology', 'machinery', 'machine', 'cyber', 'computer', 'digital', 'industrial', 'future', 'automation',
+                'robot', 'science', 'network', 'interface', 'virtual', 'military', 'engineer', 'system']
+
+def lemmatize_search_words():
+    '''
+    lemmatize serach words to compare to our lemmatized corpus
+    code to lemmatize individual words using spacy taken from this post: https://stackoverflow.com/questions/59636002/spacy-lemmatization-of-a-single-word
+    for this function to work you need to download the spacy english vocabulary using 'python -m spacy download en_core_web_sm'
+    '''
+
+    lemm_search_words = []
+    nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner']) # just keep tagger for lemmatization
+
+    for word in SEARCH_WORDS:
+        lemm_search_words.append(" ".join([token.lemma_ for token in nlp(word)]))
+
+    return list(dict.fromkeys(lemm_search_words)) #return list with duplicates removed
 
 def load_clean_metadata():
     
@@ -51,6 +69,24 @@ def get_text_dicts():
             cln_txts_dys_dict[key.split('.')[0]] = val
 
     return cln_txts_eu_dict, cln_txts_dys_dict
+
+def get_lemmatized_eutopia_text_dicts():
+
+    print('note: does not include scanned pdfs')
+
+    with open('../Cleaned-Data/lemmatized_books.json') as json_file:
+        cleaned_texts = json.load(json_file)
+
+    cln_txts_eu_dict = {}
+
+    #the keys in our input json files are file names with extensions. 
+    #remove extensions so that the dictionary keys match the IDs in the metadata table.
+    for key, val in cleaned_texts.items():
+        new_key = key.split('.')[0]
+        if "scanned" not in new_key:
+            cln_txts_eu_dict[new_key] = val
+
+    return cln_txts_eu_dict
 
 def get_all_texts(text_dict):
 

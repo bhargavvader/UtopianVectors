@@ -5,7 +5,7 @@ import numpy as np
 import pickle as pkl
 import spacy
 
-SEARCH_WORDS = ['justice', 'man', 'woman', 'artificial_intelligence', 'factory', 'labour', 'state',
+SEARCH_WORDS = ['justice', 'man', 'woman', 'artificial_intelligence', 'factory', 'labor', 'state',
                 'economy', 'food', 'freedom', 'health', 'time', 'home', 'house', 'government', 'immigrant',
                 'safety', 'police', 'policing', 'crime', 'equality', 'planet', 'space', 'earth',
                 'technology', 'machinery', 'machine', 'cyber', 'computer', 'digital', 'industrial', 'future', 'automation',

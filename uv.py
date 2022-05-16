@@ -88,20 +88,28 @@ def get_lemmatized_eutopia_text_dicts():
 
     return cln_txts_eu_dict
 
-def get_all_texts(text_dict):
+def get_all_texts(text_dict, book_info=None, exclude_rejects = True):
 
-    return [text for text in text_dict.values()]
+    if exclude_rejects: 
+        ids = book_info[~book_info.fillna('0').jode_notes.str.contains("reject_list")]
+
+    else:
+        return [text for text in text_dict.values()]
     
 
-def get_texts_year_range(year_range_lo, year_range_hi, book_info, text_dict):
+def get_texts_year_range(year_range_lo, year_range_hi, book_info, text_dict, exclude_rejects = True):
     
-    ids = book_info[(book_info.year > year_range_lo) & (book_info.year <= year_range_hi)].ID.values
+    if exclude_rejects:
+        mask = (book_info.year > year_range_lo) & (book_info.year <= year_range_hi) & (~book_info.fillna('0').jode_notes.str.contains("reject_list"))
+    else:
+        mask = (book_info.year > year_range_lo) & (book_info.year <= year_range_hi)
+    ids = book_info[mask].ID.values
     texts = [text_dict[key] for key in ids if key in text_dict]
     
     print('texts in date range: ' + str(len(texts)))
     return texts
 
-def get_texts_w_keyword(kw, book_info, text_dict):
+def get_texts_w_keyword(kw, book_info, text_dict, exclude_rejects = True):
     
     possible_keywords = ['Aotearoa/New Zealand author', 'Female author', 'English author', 'Irish author', 
      'Male author', 'African author', 'Transgender author', 'US author', 'UK author', 
@@ -115,8 +123,11 @@ def get_texts_w_keyword(kw, book_info, text_dict):
         print('no texts labeled with that keyword. possible keywords are:')
         print(possible_keywords)
 
-    bi_no_na = book_info[~book_info.keywords.isna()]
-    ids = bi_no_na[bi_no_na.keywords.str.contains(kw)].ID.values
+    if exclude_rejects:
+        mask = book_info.fillna('0').keywords.str.contains(kw) & (~book_info.fillna('0').jode_notes.str.contains("reject_list"))
+    else:
+        mask = book_info.fillna('0').keywords.str.contains(kw)    
+    ids = book_info[mask].ID.values
     texts = [text_dict[key] for key in ids if key in text_dict]
 
     print('texts with keyword ' + kw + ': ' + str(len(texts)))

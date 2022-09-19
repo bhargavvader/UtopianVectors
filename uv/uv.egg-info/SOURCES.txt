@@ -1,0 +1,8 @@
+setup.py
+uv/__init__.py
+uv/uv.py
+uv.egg-info/PKG-INFO
+uv.egg-info/SOURCES.txt
+uv.egg-info/dependency_links.txt
+uv.egg-info/not-zip-safe
+uv.egg-info/top_level.txt

@@ -7,9 +7,9 @@ import spacy
 
 SEARCH_WORDS = ['justice', 'man', 'woman', 'artificial_intelligence', 'factory', 'labor', 'state',
                 'economy', 'food', 'freedom', 'health', 'time', 'home', 'house', 'government', 'immigrant',
-                'safety', 'police', 'policing', 'crime', 'equality', 'planet', 'space', 'earth',
+                'safety', 'police', 'policing', 'crime', 'equality', 'planet', 'planetary', 'atmosphere','space', 'earth', 'diamond', 
                 'technology', 'machinery', 'machine', 'cyber', 'computer', 'digital', 'industrial', 'future', 'automation',
-                'robot', 'science', 'network', 'interface', 'virtual', 'military', 'engineer', 'system']
+                'robot', 'science', 'network', 'current', 'interface', 'virtual', 'military', 'engineer', 'system']
 
 def lemmatize_search_words():
     '''
@@ -28,10 +28,10 @@ def lemmatize_search_words():
 
 def load_clean_metadata():
     
-    with open('eutopia_metadata_clean.txt', 'rb') as f:
+    with open('../metadata/eutopia_metadata_clean.txt', 'rb') as f:
         book_info_eutopia = pkl.load(f) 
 
-    with open('dystopia_metadata_clean.txt', 'rb') as f:
+    with open('../metadata/dystopia_metadata_clean.txt', 'rb') as f:
         book_info_dystopia = pkl.load(f)
 
     return book_info_eutopia, book_info_dystopia
@@ -40,9 +40,9 @@ def get_text_dicts():
 
     print('note: does not include scanned pdfs')
 
-    with open('../Cleaned-Data/cleaned_texts_pdf.json') as json_file:
+    with open('../../Cleaned-Data/cleaned_texts_pdf.json') as json_file:
         cleaned_texts_pdf = json.load(json_file)
-    with open('../Cleaned-Data/cleaned_texts_epub_txt.json') as json_file:
+    with open('../../Cleaned-Data/cleaned_texts_epub_txt.json') as json_file:
         cleaned_texts_epub_txt = json.load(json_file)
 
     cln_txts_eu_dict = {}
@@ -74,7 +74,7 @@ def get_lemmatized_eutopia_text_dicts():
 
     print('note: does not include scanned pdfs')
 
-    with open('../Cleaned-Data/lemmatized_books.json') as json_file:
+    with open('../../Cleaned-Data/lemmatized_books.json') as json_file:
         cleaned_texts = json.load(json_file)
 
     cln_txts_eu_dict = {}
@@ -90,8 +90,10 @@ def get_lemmatized_eutopia_text_dicts():
 
 def get_all_texts(text_dict, book_info=None, exclude_rejects = True):
 
-    if exclude_rejects: 
-        ids = book_info[~book_info.fillna('0').jode_notes.str.contains("reject_list")]
+    if exclude_rejects:
+        mask =  ~book_info.fillna('0').jode_notes.str.contains("reject_list")
+        ids = book_info[mask].ID.values 
+        return [text_dict[key] for key in ids if key in text_dict]
 
     else:
         return [text for text in text_dict.values()]

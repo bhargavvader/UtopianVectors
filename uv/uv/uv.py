@@ -11,6 +11,8 @@ SEARCH_WORDS = ['justice', 'man', 'woman', 'artificial_intelligence', 'factory',
                 'technology', 'machinery', 'machine', 'cyber', 'computer', 'digital', 'industrial', 'future', 'automation',
                 'robot', 'science', 'network', 'current', 'interface', 'virtual', 'military', 'engineer', 'system']
 
+#possible additions: mars
+
 def lemmatize_search_words():
     '''
     lemmatize serach words to compare to our lemmatized corpus
